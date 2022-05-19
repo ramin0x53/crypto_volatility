@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            #splitleft {
+                height: 100%;
+                width: 76%;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                overflow-x: hidden;
+                padding-top: 20px;
+                left: 0;
+            }
+
+            #splitright {
+                height: 100%;
+                width: 24%;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                overflow-x: hidden;
+                padding-top: 20px;
+                right: 0;
+            }
+
+            #configs {
+                height: 15%;
+                width: 24%;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                overflow-x: hidden;
+                padding-top: 20px;
+                right: 0;
+                text-align: center;
+            }
+
+            #symbols {
+                height: 80%;
+                width: 24%;
+                position: fixed;
+                /* z-index: 1; */
+                bottom: 0;
+                overflow-x: hidden;
+                padding-top: 20px;
+                /* text-align: center; */
+                right: 0;
+            }
+
+            /* #configs {
+                height: 15%;
+                width: 24%;
+                position: fixed;
+                z-index: 1;
+                bottom: 0;
+                overflow-x: hidden;
+                padding-top: 20px;
+                right: 0;
+                background-color: rgb(86, 235, 83);
+            } */
+
+            #text1 {
+                height: 25px;
+                width: 250px;
+                border-width: 1px;
+                background-color: rgba(241, 241, 241, 0.592);
+            }
+
+            #btn1 {
+                height: 30px;
+                width: 60px;
+            }
+
+            #lenght {
+                left: 0;
+            }
+
+            .input1 {
+                margin-top: 20px;
+                width: 45px;
+                height: 20px;
+            }
+
+
+            #timeframeoption {
+                width: 55px;
+                height: 25px;
+            }
+
+            .delbotton {
+                height: 30px;
+                margin: 5px;
+                background-color: rgb(224, 209, 238);
+                border-color: rgb(169, 117, 218);
+                border-radius: 8px;
+            }
+        </style>
+        <meta charset="utf-8">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    </head>
+    <body>
+        <div>
+            <div id="splitleft">
+                <canvas id="myChart" ></canvas>
+            </div>
+            <div id="splitright">
+                <div id="configs">
+                    <input type="text" id="text1" placeholder="Symbol name">
+                    <button onclick="addSymbol()" id="btn1">Add</button>
+
+                    <div style="text-align: left;">
+                        <label id="lenght" style="margin-left: 20px;" for="lenghtin">lenght:</label>
+                        <input id="lenghtin" type="number" class="input1" style="margin-right: 25px;" value=30>
+                        <label for="timeframeoption">timeframe:</label>
+                        <select id="timeframeoption" class="input1">
+                            <option value="1m">1m</option>
+                            <option value="3m">3m</option>
+                            <option value="5m">5m</option>
+                            <option value="15m">15m</option>
+                            <option value="30m">30m</option>
+                            <option value="1h" selected="selected">1h</option>
+                            <option value="2h">2h</option>
+                            <option value="4h">4h</option>
+                            <option value="6h">6h</option>
+                            <option value="8h">8h</option>
+                            <option value="12h">12h</option>
+                            <option value="1d">1d</option>
+                            <option value="3d">3d</option>
+                            <option value="1w">1w</option>
+                            <option value="1M">1M</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="symbols">
+
+                </div>
+                <!-- <div id="configs">
+
+                </div> -->
+            </div>
+        </div>
+
+        <!-- height="40vh" width="80vw" -->
+        <script>
+            function removeKey(keyname){
+                delete resultObj[keyname];
+                let element = document.getElementById(keyname);
+                element.remove();
+            }
+
+            function createbutton(idvalue){
+                let para = document.createElement("button");
+                let node = document.createTextNode(idvalue);
+                para.setAttribute("id", idvalue);
+                para.setAttribute("class", "delbotton");
+                para.setAttribute("onclick", "removeKey(this.id)");
+                para.appendChild(node);
+                let element = document.getElementById("symbols");
+                element.appendChild(para);
+            }
+
+            // createbutton("BTCUSDT");
+
+            function createBottonObject(){
+                let tempobject = Object.keys(resultObj);
+                for(let i = 0; i < tempobject.length; i++){
+                    if(!(!!document.getElementById(tempobject[i]))){
+                        createbutton(tempobject[i]);
+                    }
+                }
+            }
+
+            setInterval(function(){
+                createBottonObject();
+            },300);
+        </script>
+
+        <script>
+            function getConfigs(){
+                timeframe = document.getElementById("timeframeoption").value;
+                lenght = parseInt(document.getElementById("lenghtin").value);
+            }
+
+            setInterval(function(){
+                getConfigs()
+            },300);
+        </script>
+
+        <script>
+            var input = document.getElementById("text1");
+            input.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    document.getElementById("btn1").click();
+                }
+            });
+
+            function addSymbol() {
+                let symboln = document.getElementById("text1").value.toUpperCase();
+                document.getElementById("text1").value = "";
+                if(symboln != ""){
+                    resultObj[symboln] = null;
+                }
+            }
+        </script>
+
+        <script>
+
+            // var resultObj = {
+            //     BTCUSDT:null,
+            //     ETHUSDT:null,
+            //     BNBUSDT:null,
+            //     AVAXUSDT:null,
+            //     ADAUSDT:null,
+            //     ATOMUSDT:null,
+            //     LINKUSDT:null,
+            //     XRPUSDT:null,
+            //     SOLUSDT:null,
+            //     FTMUSDT:null
+            // };
+
+            var resultObj = {};
+            var defaultresultObj = {
+                BTCUSDT:null,
+                ETHUSDT:null,
+                BNBUSDT:null,
+                AVAXUSDT:null,
+                ADAUSDT:null,
+                ATOMUSDT:null,
+                LINKUSDT:null,
+                XRPUSDT:null,
+                SOLUSDT:null,
+                FTMUSDT:null
+            };
+
+            if (typeof(Storage) !== "undefined") {
+                if(localStorage.getItem("savedSymbols") !== null){
+                    resultObj = JSON.parse(localStorage.getItem("savedSymbols"));
+                } else {
+                resultObj = defaultresultObj;
+                }
+
+            } else {
+                resultObj = defaultresultObj;
+            }
+
+            setInterval(function(){
+                localStorage.setItem("savedSymbols", JSON.stringify(resultObj));
+                if(localStorage.getItem("savedSymbols") === "{}"){
+                    localStorage.setItem("savedSymbols", JSON.stringify(defaultresultObj));
+                }
+            }, 300);
+
+            var lenght = 30;
+            var timeframe= "1h";
+            var updatetime = 10000;
+
+            function updateResultObj(){
+                for (let i = 0; i < Object.keys(resultObj).length; i++){
+                    getData(Object.keys(resultObj)[i], timeframe, lenght);
+                }
+            }
+
+            var getJSON = function(symbol, interval, limit, callback) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', "https://api.binance.com/api/v3/klines?symbol=" + symbol + "&interval=" + interval + "&limit=" + limit, true);
+                xhr.responseType = 'json';
+
+                xhr.onload = function() {
+                
+                    var status = xhr.status;
+                
+                    if (status == 200) {
+                        callback(null, xhr.response);
+                    } else {
+                        callback(status);
+                    }
+                };
+
+                xhr.send();
+            };
+
+            function highlowperc(high, low, candlecolor){
+                if(candlecolor == "green"){
+                    let diff = high - low;
+                    let perc = (diff*100)/low;
+                    return perc;
+                } else if (candlecolor == "red"){
+                    let diff = high - low;
+                    let perc = (diff*100)/high;
+                    return perc;
+                } else {
+                    console.log("Wrong candlecolor in highlowperc function");
+                }
+            };
+
+            function opencloseperc(open, close){
+                if(open <= close){
+                    let diff = close - open;
+                    let perc = (diff*100)/open;
+                    return perc;
+                } else {
+                    let diff = open - close;
+                    let perc = (diff*100)/open;
+                    return perc*(-1);
+                }
+            };
+
+            function averageperc(list){
+                var r = 0;
+                for(let s = 0; s < Object.keys(list).length; s++){
+                    if(list[s][1] <= list[s][4]){
+                        r = r + highlowperc(list[s][2], list[s][3], "green");
+                    } else {
+                        r = r + highlowperc(list[s][2], list[s][3], "red");
+                    }
+                }
+
+                return r/Object.keys(list).length;
+            };
+
+            function getData(symbol, interval, limit){
+                getJSON(symbol, interval, limit,  function(err, data) {
+                
+                if (err != null) {
+                    console.error(err);
+                } else {
+
+                    //Convert data arrays to float
+                    for (let i = 0; i < Object.keys(data).length; i++) {
+                        for (let j = 0; j < Object.keys(data[i]).length; j++){
+                            if(typeof(data[i][j]) == "string"){
+                                data[i][j] = parseFloat(data[i][j]);
+                            }
+                        }
+                    }
+                    let lastbar = Object.keys(data).length-1;
+                    if(resultObj.hasOwnProperty(symbol)){
+                        resultObj[symbol] = opencloseperc(data[lastbar][1], data[lastbar][4])/averageperc(data);
+                    }
+                    // resultObj[symbol] = opencloseperc(data[lastbar][1], data[lastbar][4])/averageperc(data);
+                }
+                });
+            };
+            
+            function runDataupdate(){
+                updateResultObj();
+                setInterval(function(){
+                    updateResultObj();
+                } , updatetime);
+
+                // setInterval(function(){
+                //     console.log(resultObj);
+                // }, updatetime)
+            }
+
+            runDataupdate();
+
+        </script>
+
+        <script>
+
+            function maxvalue(){
+                let temp = Object.values(resultObj);
+                for(let i = 0; i < temp.length; i++){
+                    if(temp[i]<0){
+                        temp[i] = temp[i] * (-1);
+                    }
+                }
+                return Math.max(...temp);
+            }
+
+
+            function colorize() {
+                return (ctx) => {
+                    const v = ctx.parsed.x;
+                    let c = null;
+                    if(v>=0){
+                        c = "rgba(0, 255, 108, 1)";
+                    } else {
+                        c = "rgba(255, 0, 62, 1)";
+                    }
+
+                    return c;
+                };
+            }
+
+            var maxv = maxvalue() + (maxvalue()/20)
+
+            // function chartScale(){
+            //     return (ctx) => {
+            //         let c = null;
+            //         if(maxv>0.5){
+            //             c = maxv;
+            //         } else {
+            //             c = 0.5;
+            //         }
+            //         console.log(c)
+            //         return c;
+            //     };
+            // }
+
+            
+            const ctx = document.getElementById('myChart');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(resultObj),
+                    datasets: [{
+                        label: 'Volatility',
+                        data: Object.values(resultObj),
+                        backgroundColor: colorize(),
+                        borderColor: colorize(),
+                        // backgroundColor: [
+                        //     'rgba(0, 66, 255, 0.5)'
+                        // ],
+                        // borderColor: [
+                        //     'rgba(0, 66, 255, 1)'
+                        // ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            min: (-1)*maxv,
+                            max: maxv
+                        }
+                    },
+                    indexAxis: 'y',
+                    // Elements options apply to all of the options unless overridden in a dataset
+                    // In this case, we are setting the border of each horizontal bar to be 2px wide
+                    elements: {
+                    bar: {
+                        borderWidth: 2,
+                    }
+                    },
+                    responsive: true,
+                    plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Crypto Volatility'
+                    }
+                    }
+                }
+            });
+
+
+            function updateChart() {
+                maxv = maxvalue() + (maxvalue()/20)
+                myChart.data.labels = Object.keys(resultObj);
+                myChart.data.datasets = [{
+                    label: 'Volatility',
+                    data: Object.values(resultObj),
+                    backgroundColor: colorize(),
+                    borderColor: colorize(),
+                    // backgroundColor: [
+                    //     'rgba(0, 66, 255, 0.5)'
+                    // ],
+                    // borderColor: [
+                    //     'rgba(0, 66, 255, 1)'
+                    // ],
+                    borderWidth: 2
+                }];
+                myChart.options = {
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            min: (-1)*maxv,
+                            max: maxv
+                        }
+                    },
+                    indexAxis: 'y',
+                    // Elements options apply to all of the options unless overridden in a dataset
+                    // In this case, we are setting the border of each horizontal bar to be 2px wide
+                    elements: {
+                    bar: {
+                        borderWidth: 2,
+                    }
+                    },
+                    responsive: true,
+                    plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Crypto Volatility'
+                    }
+                    }
+                }
+                myChart.update("none");
+            }
+
+
+            setInterval(function(){
+                updateChart();
+            },300)
+
+        </script>
+    </body>
+</html>
